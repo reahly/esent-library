@@ -62,12 +62,12 @@ public:
 
 		unsigned long read_bytes;
 		if constexpr ( std::is_same_v<T, std::string> ) {
-			wchar_t blob_str[128] = { 0 };
+			wchar_t result[128] = { 0 };
 			if ( JetRetrieveColumn( session, table_id, columnname.columnid, blob_str, sizeof blob_str, &read_bytes, 0, nullptr ) != JET_errSuccess )
 				return { };
 
-			std::wstring wstrIdBlob( blob_str );
-			return std::string( wstrIdBlob.begin( ), wstrIdBlob.end( ) );
+			std::wstring result_wstr( blob_str );
+			return std::string( result_wstr.begin( ), result_wstr.end( ) );
 		}
 
 		if constexpr ( std::is_same_v<T, uint8_t> ) {
