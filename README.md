@@ -17,7 +17,8 @@ int main( ) {
 	const auto blob = lib.read_column<std::string>( id, "IdBlob" );
 	const auto index = lib.read_column<int>( id, "IdIndex" );
 	const auto type = lib.read_column<byte>( id, "IdType" );
-
+        const auto timestamp = lib.read_column<time_t>( id, "Timestamp" );
+ 
 	//
      } );
 
