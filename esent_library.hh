@@ -2,6 +2,7 @@
 #include <esent.h>
 #include <string>
 #include <functional>
+#include <chrono>
 
 class esent {
 	JET_INSTANCE instance = 0;
@@ -67,20 +68,24 @@ public:
 			return std::string( result_wstr.begin( ), result_wstr.end( ) );
 		}
 
-		if constexpr ( std::is_same_v<T, uint8_t> ) {
-			uint8_t result;
+		
+		if constexpr ( std::is_same_v<T, uint8_t> || std::is_same_v<T, int> || std::is_same_v<T, uintptr_t> || std::is_same_v<T, double> ) {
+			T result;
 			if ( JetRetrieveColumn( session, table_id, columnname.columnid, &result, sizeof result, &read_bytes, 0, nullptr ) != JET_errSuccess )
 				return { };
 
 			return result;
 		}
 
-		if constexpr ( std::is_same_v<T, int> ) {
-			int result;
+		if constexpr ( std::is_same_v<T, time_t> ) {
+			double result;
 			if ( JetRetrieveColumn( session, table_id, columnname.columnid, &result, sizeof result, &read_bytes, 0, nullptr ) != JET_errSuccess )
 				return { };
 
-			return result;
+			constexpr double seconds_per_day = 86400.0;
+			constexpr std::time_t base_date = -2209161600;
+
+			return static_cast<std::time_t>( result * seconds_per_day + base_date );
 		}
 
 		return { };
