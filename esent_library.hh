@@ -32,9 +32,6 @@ public:
 		if ( JetOpenDatabaseA( session, path.c_str( ), nullptr, &database_id, JET_bitDbReadOnly ) != JET_errSuccess )
 			return false;
 
-		if ( JetOpenDatabaseA( session, path.c_str( ), nullptr, &database_id, JET_bitDbReadOnly ) != JET_errSuccess )
-			return false;
-
 		backup_table_path = path;
 		return true;
 	}
