@@ -15,7 +15,8 @@ public:
 		if ( JetCreateInstanceA( &instance, instance_name.c_str( ) ) != JET_errSuccess )
 			return false;
 
-		JetSetSystemParameterA( &instance, JET_sesidNil, JET_paramTempPath, 0, "" );
+		JetSetSystemParameterA( &instance, JET_sesidNil, JET_paramDatabasePageSize, 0, nullptr );
+		JetSetSystemParameterA( &instance, JET_sesidNil, JET_paramRecovery, 0, "Off" );
 
 		if ( JetInit( &instance ) != JET_errSuccess )
 			return false;
@@ -64,11 +65,18 @@ public:
 			if ( JetRetrieveColumn( session, table_id, columnname.columnid, blob_str, sizeof blob_str, &read_bytes, 0, nullptr ) != JET_errSuccess )
 				return { };
 
-			std::wstring result_wstr( blob_str );
-			return std::string( result_wstr.begin( ), result_wstr.end( ) );
+			std::wstring result_str( blob_str );
+			return std::string( result_str.begin( ), result_str.end( ) );
 		}
 
-		
+		if constexpr ( std::is_same_v<T, std::wstring> ) {
+			wchar_t result[128] = { 0 };
+			if ( JetRetrieveColumn( session, table_id, columnname.columnid, blob_str, sizeof blob_str, &read_bytes, 0, nullptr ) != JET_errSuccess )
+				return { };
+
+			return std::wstring( result );
+		}
+
 		if constexpr ( std::is_same_v<T, uint8_t> || std::is_same_v<T, int> || std::is_same_v<T, uintptr_t> || std::is_same_v<T, double> ) {
 			T result;
 			if ( JetRetrieveColumn( session, table_id, columnname.columnid, &result, sizeof result, &read_bytes, 0, nullptr ) != JET_errSuccess )
