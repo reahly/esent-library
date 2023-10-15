@@ -91,9 +91,9 @@ public:
 				return { };
 
 			constexpr double seconds_per_day = 86400.0;
-			constexpr std::time_t base_date = -2209161600;
+			constexpr std::time_t base_date = -2209161600LL;
 
-			return static_cast<std::time_t>( result * seconds_per_day + base_date );
+			return result * seconds_per_day + base_date;
 		}
 
 		return { };
