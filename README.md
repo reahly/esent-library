@@ -1,7 +1,7 @@
-# esent-library
-esent c++20 header only library
+## Example Usage
 
-Example Usage:
+Here's an example of how you can use this library to parse an ESENT database file and access records and columns:
+
 ```c++
 int main( ) {
     constexpr auto path = R"(jetdb.dat)";
